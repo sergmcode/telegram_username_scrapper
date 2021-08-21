@@ -9,6 +9,7 @@ import cv2
 from PIL import ImageGrab
 
 import re
+import json
 
 user_list = []
 output_file_name = "user_list.json"
@@ -22,28 +23,29 @@ for i in range(1, 100):
   time.sleep(0.2)
 
   try:
-  #locate on screen Username
+    #locate Username on screen 
     loc = pyautogui.locateOnScreen('username.png')
 
+    #capture region near username
     ss = pyautogui.screenshot(region=(loc[0], loc[1]-25, 200, 30))
     # ss.show()
 
-    tesstr = pytesseract.image_to_string(ss)
-    print(tesstr.strip())
+    #recognize to text
+    username = pytesseract.image_to_string(ss)
+    print(username.strip())
 
-    if tesstr != '' or tesstr is not None:
-      tesstr = tesstr.strip()
-      m = re.match('^@[^ ]+$', tesstr)
+    if username != '' or username is not None:
+      username = username.strip()
+      m = re.match('^@[^ ]+$', username)
       if m is not None:
-        user_list.append(tesstr)
+        user_list.append(username)
 
   except Exception as ex:
     print(ex)
 
-  time.sleep(0.2)
   pyautogui.typewrite(['esc'])
-
   time.sleep(1)
+
   #key press 8 times 3 and 1 time 2
   if i % 8 == 0:
     pyautogui.typewrite(['down', 'down'], interval=0.1)
@@ -51,7 +53,6 @@ for i in range(1, 100):
     pyautogui.typewrite(['down', 'down', 'down'], interval=0.1)
 
 
-import json
 with open(output_file_name, 'w', encoding='utf8') as f:
   json.dump(user_list, f)
 

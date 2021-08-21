@@ -1,1 +1,4 @@
 scrapper_venv/
+others_code/
+telethon/
+app_configuration.py
